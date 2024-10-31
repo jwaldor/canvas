@@ -128,6 +128,6 @@ export default function App() {
         canvasRef.current.height = window.innerHeight;
     }, []);
 
-    return <canvas ref={canvasRef} style={{ border: '1px solid black' }}></canvas>;
+    return <canvas ref={canvasRef} ></canvas>;
 }
 

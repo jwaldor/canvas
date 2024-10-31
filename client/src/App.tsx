@@ -88,34 +88,35 @@ export default function App() {
 
         const ctx = canvas.getContext('2d');
         if (!ctx) return;
+        else {
+            // Function to draw a rotated rectangle
+            function drawRotatedRectangle(rectangle: RectangleDrawType) {
+                // Convert degrees to radians
+                const angleInRadians = rectangle.angleInDegrees * (Math.PI / 180);
 
-        // Function to draw a rotated rectangle
-        function drawRotatedRectangle(rectangle: RectangleDrawType) {
-            // Convert degrees to radians
-            const angleInRadians = rectangle.angleInDegrees * (Math.PI / 180);
+                // Save the current canvas state
+                ctx.save();
 
-            // Save the current canvas state
-            ctx.save();
+                // Translate to the center of the rectangle
+                ctx.translate(rectangle.x, rectangle.y);
 
-            // Translate to the center of the rectangle
-            ctx.translate(rectangle.x, rectangle.y);
+                // Rotate the canvas
+                ctx.rotate(angleInRadians);
 
-            // Rotate the canvas
-            ctx.rotate(angleInRadians);
+                // Draw the rectangle
+                ctx.fillStyle = rectangle.color;
+                ctx.fillRect(-rectangle.width / 2, -LINE_HEIGHT / 2, rectangle.width, LINE_HEIGHT);
 
-            // Draw the rectangle
-            ctx.fillStyle = rectangle.color;
-            ctx.fillRect(-rectangle.width / 2, -LINE_HEIGHT / 2, rectangle.width, LINE_HEIGHT);
-
-            // Restore the canvas state
-            ctx.restore();
+                // Restore the canvas state
+                ctx.restore();
+            }
+            // Clear the canvas before drawing
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            rectangles.forEach(line => {
+                const drawRectangles = calculateRectangleDrawType(line);
+                drawRectangles.forEach(drawRotatedRectangle);
+            });
         }
-        // Clear the canvas before drawing
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        rectangles.forEach(line => {
-            const drawRectangles = calculateRectangleDrawType(line);
-            drawRectangles.forEach(drawRotatedRectangle);
-        });
         // Draw multiple rectangles with different positions and rotations
         // drawRotatedRectangle({ x: 100, y: 100, angleInDegrees: 20, color: 'blue', width: 10 });
         // drawRotatedRectangle({ x: 200, y: 200, angleInDegrees: 45, color: 'red', width: 10 });

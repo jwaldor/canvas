@@ -1,7 +1,4 @@
-import {
-  RectangleStoreTypeLine,
-  RectangleDrawType,
-} from "../components/EditingCanvas";
+import { RectangleStoreTypeLine, RectangleDrawType } from "../App";
 export function calculateAngleFromVertical(
   p1: { x: number; y: number },
   p2: { x: number; y: number }

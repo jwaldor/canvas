@@ -4,7 +4,23 @@ import Redis from "ioredis";
 // Create a Redis instance.
 // By default, it will connect to localhost:6379.
 // We are going to cover how to specify connection options soon.
-const redis = new Redis();
+const redis = new Redis({
+  // your connection config here
+});
+
+// Add error handlers
+redis.on("error", (error) => {
+  console.error("Redis connection error:", error);
+});
+
+redis.on("connect", () => {
+  console.log("Successfully connected to Redis");
+});
+
+redis.on("reconnecting", () => {
+  console.log("Reconnecting to Redis...");
+});
+
 // console.log("redis", redis);
 redis.set("mykey", "value"); // Returns a promise which resolves to "OK" when the command succeeds.
 

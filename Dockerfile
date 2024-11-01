@@ -22,9 +22,15 @@ RUN npm install -g typescript
 # Compile TypeScript
 RUN tsc
 
-# Create startup script
-RUN echo '#!/bin/sh\nredis-server --daemonize yes && node dist/routes.js' > start.sh
-RUN chmod +x start.sh
+# Create startup script with absolute path
+COPY <<'EOF' /start.sh
+#!/bin/sh
+redis-server --daemonize yes
+cd /app
+node dist/routes.js
+EOF
+
+RUN chmod +x /start.sh
 
 # Set environment variables
 ENV PORT=3000
@@ -32,4 +38,4 @@ ENV NODE_ENV=production
 
 EXPOSE $PORT
 
-CMD ["./start.sh"]
+CMD ["/start.sh"]

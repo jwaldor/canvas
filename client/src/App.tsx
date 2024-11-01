@@ -3,6 +3,7 @@ import { z } from 'zod';
 import { postSchema } from '../ZodSchema';
 import { calculateRectangleDrawType } from './services/canvasEngine';
 import { socket } from './services/socket';
+import { addPoint, createLine } from './services/updateEngine';
 const LINE_HEIGHT = 28;
 export type RectangleDrawType = { x: number, y: number, angleInDegrees: number, color: string, width: number }
 export type RectangleStoreType = Extract<z.infer<typeof postSchema>['artform'], { type: 'Canvas' }>['parameters']['users'][number]['lines']
@@ -11,15 +12,13 @@ export type RectangleStoreTypeLine = RectangleStoreType[number]
 
 export default function App() {
     const canvasRef = useRef<HTMLCanvasElement>(null);
-
-    const [rectangles, setRectangles] = useState<RectangleStoreType>([]);
-
+    const [rectangles, setRectangles] = useState<RectangleStoreTypeLine[]>([]);
     const [isDrawing, setIsDrawing] = useState(false);
     // Add mouse event handlers
     useEffect(() => {
-        socket.on("updateCanvas", (data: { userId: string, lines: RectangleStoreTypeLine[] }) => {
-            console.log("updateCanvas", data);
-            setRectangles(data.lines);
+        socket.on("updateCanvas", (lines: RectangleStoreTypeLine[]) => {
+            console.log("updateCanvas", lines);
+            setRectangles(lines);
         });
         const canvas = canvasRef.current;
         if (!canvas) return;
@@ -27,7 +26,7 @@ export default function App() {
 
         const handleMouseDown = () => {
             setIsDrawing(true);
-            setRectangles(prev => [...prev, []]);
+            createLine();
         };
         const handleMouseUp = () => setIsDrawing(false);
         const handleMouseMove = (event: MouseEvent) => {
@@ -36,36 +35,7 @@ export default function App() {
             const rect = canvas.getBoundingClientRect();
             const x = event.clientX - rect.left;
             const y = event.clientY - rect.top;
-            setRectangles(prev => {
-                const newRectangles = structuredClone(prev);
-                const lastLine = newRectangles[newRectangles.length - 1];
-                if (lastLine.length === 0) {
-                    lastLine.push({
-                        x,
-                        y,
-                        color: 'blue',
-                        width: 10
-                    });
-                    return newRectangles;
-                }
-
-                const lastPoint = lastLine[lastLine.length - 1];
-                const distance = Math.sqrt(
-                    Math.pow(x - lastPoint.x, 2) +
-                    Math.pow(y - lastPoint.y, 2)
-                );
-
-                // Only add point if distance is greater than 5 pixels
-                if (distance > 2) {
-                    lastLine.push({
-                        x,
-                        y,
-                        color: 'blue',
-                        width: 10
-                    });
-                }
-                return newRectangles;
-            });
+            addPoint({ x, y });
 
         };
 

@@ -1,13 +1,14 @@
 import { io } from "socket.io-client";
 
-export const socket = io(import.meta.env.VITE_API_URL, {
+export const socket = io(import.meta.env.VITE_WEBSOCKET_URL, {
   transports: ["websocket"],
   autoConnect: true,
 });
-export const joinRoom = (roomId: string) => {
-  socket.emit("joinRoom", roomId);
+export const joinRoom = () => {
+  socket.emit("joinRoom");
 };
 
+joinRoom();
 socket.on("updateCanvas", (data) => {
   console.log("updateCanvas", data);
 });

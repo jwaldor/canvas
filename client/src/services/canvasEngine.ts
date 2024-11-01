@@ -22,6 +22,7 @@ export function calculateRectangleDrawType(
   rectangles: RectangleStoreTypeLine
 ): RectangleDrawType[] {
   if (rectangles.length === 1) return [];
+  console.log("calculateRectangleDrawType", rectangles);
   return rectangles.map((rect, index) => {
     // If this is the last point, use the first point as the next point
     const nextRect =

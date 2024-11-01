@@ -70,7 +70,7 @@ export default function App() {
             function drawRotatedRectangle(rectangle: RectangleDrawType) {
                 // Convert degrees to radians
                 const angleInRadians = rectangle.angleInDegrees * (Math.PI / 180);
-
+                if (!ctx) return;
                 // Save the current canvas state
                 ctx.save();
 

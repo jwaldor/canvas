@@ -4,6 +4,7 @@ import { postSchema } from '../ZodSchema';
 import { calculateRectangleDrawType } from './services/canvasEngine';
 import { socket } from './services/socket';
 import { addPoint, createLine } from './services/updateEngine';
+import { useParams } from 'react-router-dom';
 const LINE_HEIGHT = 28;
 export type RectangleDrawType = { x: number, y: number, angleInDegrees: number, color: string, width: number }
 export type RectangleStoreType = Extract<z.infer<typeof postSchema>['artform'], { type: 'Canvas' }>['parameters']['users'][number]['lines']
@@ -14,6 +15,12 @@ export default function App() {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const [rectangles, setRectangles] = useState<RectangleStoreTypeLine[]>([]);
     const [isDrawing, setIsDrawing] = useState(false);
+    const { roomId } = useParams();
+    console.log("roomId", roomId);
+    useEffect(() => {
+        console.log("joinRoom", roomId);
+        socket.emit("joinRoom", roomId);
+    }, [roomId]);
     // Add mouse event handlers
     useEffect(() => {
         socket.on("updateCanvas", (lines: RectangleStoreTypeLine[]) => {

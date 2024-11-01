@@ -1,12 +1,4 @@
-FROM node:20-alpine
-
-# Install Redis
-RUN apk update && \
-    apk add --no-cache redis curl
-
-# Install Bun
-RUN curl -fsSL https://bun.sh/install | bash
-ENV PATH="/root/.bun/bin:${PATH}"
+FROM oven/bun:1
 
 # Create app directory
 WORKDIR /app
@@ -15,13 +7,13 @@ WORKDIR /app
 COPY server/package*.json ./
 
 # Install dependencies
-RUN npm install
+RUN bun install
 
 # Copy server files
 COPY server/ .
 
 # Install TypeScript globally
-RUN npm install -g typescript
+RUN bun install -g typescript
 
 # Compile TypeScript
 RUN tsc

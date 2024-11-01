@@ -27,7 +27,7 @@ COPY <<'EOF' /start.sh
 #!/bin/sh
 # redis-server --daemonize yes
 cd /app
-node --experimental-specifier-resolution=node dist/routes.js
+bun --experimental-specifier-resolution=node dist/routes.js
 EOF
 
 RUN chmod +x /start.sh
@@ -35,6 +35,13 @@ RUN chmod +x /start.sh
 # Set environment variables
 ENV PORT=3000
 ENV NODE_ENV=production
+
+ENV REDIS_URL=$REDIS_URL \
+    REDISHOST=$REDISHOST \
+    REDISPASSWORD=$REDISPASSWORD \
+    REDISPORT=$REDISPORT \
+    REDISUSER=$REDISUSER
+
 
 EXPOSE $PORT
 

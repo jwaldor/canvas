@@ -7,7 +7,11 @@ import Redis from "ioredis";
 const redis = new Redis({
   // your connection config here
 });
-
+console.log("REDIS_URL", process.env.REDIS_URL);
+console.log("REDISHOST", process.env.REDISHOST);
+console.log("REDISPASSWORD", process.env.REDISPASSWORD);
+console.log("REDISPORT", process.env.REDISPORT);
+console.log("REDISUSER", process.env.REDISUSER);
 // Add error handlers
 redis.on("error", (error) => {
   console.error("Redis connection error:", error);

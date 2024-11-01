@@ -2,7 +2,11 @@ FROM node:20-alpine
 
 # Install Redis
 RUN apk update && \
-    apk add --no-cache redis
+    apk add --no-cache redis curl
+
+# Install Bun
+RUN curl -fsSL https://bun.sh/install | bash
+ENV PATH="/root/.bun/bin:${PATH}"
 
 # Create app directory
 WORKDIR /app

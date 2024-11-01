@@ -5,7 +5,13 @@ import Redis from "ioredis";
 // By default, it will connect to localhost:6379.
 // We are going to cover how to specify connection options soon.
 const redis = new Redis({
-  // your connection config here
+  host: process.env.REDISHOST,
+  port: parseInt(process.env.REDISPORT || "6379"),
+  username: process.env.REDISUSER,
+  password: process.env.REDISPASSWORD,
+  tls: {
+    rejectUnauthorized: false, // This tells Node.js to accept Railway's TLS certificate
+  },
 });
 console.log("REDIS_URL", process.env.REDIS_URL);
 console.log("REDISHOST", process.env.REDISHOST);

@@ -36,30 +36,37 @@ io.on("connection", (socket) => {
   });
   socket.on("updateLine", async (data) => {
     await queue.add(async () => {
-      console.log("updateLine", data);
+      console.log("rooms socket.id", socket.rooms);
       const [lastLine, maxLineId] = await getLastLine(
-        socket.rooms[socket.id],
+        Array.from(socket.rooms)[0],
         socket.id
       );
       const newLine = updateLine(lastLine, data.x, data.y);
-      setLine(socket.rooms[socket.id], socket.id, String(maxLineId), newLine);
-      const lines = await getLines(socket.rooms[socket.id], socket.id);
-      io.to(socket.rooms[socket.id]).emit("updateCanvas", lines);
+      setLine(
+        Array.from(socket.rooms)[0],
+        socket.id,
+        String(maxLineId),
+        newLine
+      );
+      const lines = await getLines(Array.from(socket.rooms)[0], socket.id);
+      io.to(Array.from(socket.rooms)[0]).emit("updateCanvas", lines);
     });
   });
-  socket.on("joinRoom", (roomId) => {
+  socket.on("joinRoom", async (roomId) => {
+    console.log("joinRoom", roomId);
+    socket.rooms.clear();
     socket.join(roomId);
+    const lines = await getLines(Array.from(socket.rooms)[0], socket.id);
+    io.to(Array.from(socket.rooms)[0]).emit("updateCanvas", lines);
   });
   socket.on("createLine", async () => {
-    console.log("here createLine");
     await queue.add(async () => {
-      console.log("createLine");
-      const lines = await getLines(socket.rooms[socket.id], socket.id);
+      const lines = await getLines(Array.from(socket.rooms)[0], socket.id);
       const lineCount = lines.length;
-      console.log("lineCount", lineCount);
+
       const newLineId = lineCount + 1;
-      setLine(socket.rooms[socket.id], socket.id, newLineId.toString(), []);
-      io.to(socket.rooms[socket.id]).emit("updateCanvas", lines);
+      setLine(Array.from(socket.rooms)[0], socket.id, newLineId.toString(), []);
+      io.to(Array.from(socket.rooms)[0]).emit("updateCanvas", lines);
     });
   });
 });

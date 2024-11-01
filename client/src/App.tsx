@@ -16,7 +16,6 @@ export default function App() {
     const [rectangles, setRectangles] = useState<RectangleStoreTypeLine[]>([]);
     const [isDrawing, setIsDrawing] = useState(false);
     const { roomId } = useParams();
-    console.log("roomId", roomId);
     useEffect(() => {
         console.log("joinRoom", roomId);
         socket.emit("joinRoom", roomId);
@@ -70,7 +69,7 @@ export default function App() {
             function drawRotatedRectangle(rectangle: RectangleDrawType) {
                 // Convert degrees to radians
                 const angleInRadians = rectangle.angleInDegrees * (Math.PI / 180);
-
+                if (!ctx) return;
                 // Save the current canvas state
                 ctx.save();
 

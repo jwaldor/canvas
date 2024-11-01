@@ -16,7 +16,7 @@ COPY server/ .
 RUN bun install -g typescript
 
 # Compile TypeScript
-RUN tsc
+RUN bun build ./routes.ts --outdir ./dist
 
 # Create startup script with absolute path
 COPY <<'EOF' /start.sh

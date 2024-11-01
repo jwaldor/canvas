@@ -12,18 +12,11 @@ RUN bun install
 # Copy server files
 COPY server/ .
 
-# Install TypeScript globally
-RUN bun install -g typescript
-
-# Compile TypeScript
-RUN bun build ./routes.ts --outdir ./dist
-
 # Create startup script with absolute path
 COPY <<'EOF' /start.sh
 #!/bin/sh
-# redis-server --daemonize yes
 cd /app
-bun --experimental-specifier-resolution=node dist/routes.js
+bun routes.ts
 EOF
 
 RUN chmod +x /start.sh

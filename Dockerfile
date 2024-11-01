@@ -25,9 +25,9 @@ RUN tsc
 # Create startup script with absolute path
 COPY <<'EOF' /start.sh
 #!/bin/sh
-redis-server --daemonize yes
+# redis-server --daemonize yes
 cd /app
-node dist/routes.js
+node --experimental-specifier-resolution=node dist/routes.js
 EOF
 
 RUN chmod +x /start.sh
